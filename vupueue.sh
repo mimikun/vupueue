@@ -38,6 +38,16 @@ version() {
   echo "v$VERSION"
 }
 
+# magic
+before_sudo() {
+  if ! test "$(
+    sudo uname >>/dev/null
+    echo $?
+  )" -eq 0; then
+    exit 1
+  fi
+}
+
 # Ubuntu
 ubuntu() {
   # Upgrade APT repogitory list
@@ -129,18 +139,16 @@ while (("$#")); do
   esac
 done
 
+before_sudo
+
 # OSごとで処理を分岐
-if [ "$OS_INFO" = "$UBUNTU_OS" ]; then
-  ubuntu
-elif [ "$OS_INFO" = "$MAC_OS" ]; then
-  mac
-elif [ "$OS_INFO" = "$ARCH_OS" ]; then
-  arch
-elif [ "$OS_INFO" = "$ENDEAVOUR_OS" ]; then
-  arch
-else
-  echo "This distro NOT support."
-fi
+case "$OS_INFO" in
+"$UBUNTU_OS") ubuntu ;;
+"$MAC_OS") mac ;;
+"$ARCH_OS") arch ;;
+"$ENDEAVOUR_OS") arch ;;
+*) echo "This distro NOT support." ;;
+esac
 
 # 共通の処理
 ohter_tools
