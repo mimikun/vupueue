@@ -101,6 +101,11 @@ pueue_update_asdf_neovim_nightly() {
   fi
 }
 
+pueue_update_asdf_nodejs_lts() {
+  asdf uninstall nodejs lts
+  pueue add -- 'asdf install nodejs lts'
+}
+
 # other
 ohter_tools() {
   # Upgrade Rust toolchains
@@ -128,8 +133,6 @@ no_pueue_other_tools() {
   fish -c 'fisher update'
   asdf plugin update --all
   update_asdf_tools
-  asdf uninstall nodejs lts
-  asdf install nodejs lts
   pueue_update_asdf_neovim_nightly
   # Update rust tools
   update_cargo_packages
